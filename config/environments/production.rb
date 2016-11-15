@@ -79,4 +79,5 @@ Rails.application.configure do
 
   #source: http://jaylee.com/heroku-missing-secret_toekn-and-secret_key_base-for-production/
   config.secret_key_base = ENV["SECRET_KEY_BASE"]
+  ActionMailer::Base.delivery_method = :test
 end
