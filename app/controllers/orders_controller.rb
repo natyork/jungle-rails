@@ -48,17 +48,19 @@ class OrdersController < ApplicationController
     )
 
     cart.each do |product_id, details|
-      if product = Product.find_by(id: product_id)
-        quantity = details['quantity'].to_i
+      if @product = Product.find_by(id: product_id)
+        @quantity = details['quantity'].to_i
         order.line_items.new(
-          product: product,
-          quantity: quantity,
-          item_price: product.price,
-          total_price: product.price * quantity
+          product: @product,
+          quantity: @quantity,
+          item_price: @product.price,
+          total_price: @product.price * @quantity
         )
       end
     end
-    order.save!
+    if order.save!
+      update_product_quantity(@product, @quantity)
+    end
     order
   end
 
@@ -71,6 +73,11 @@ class OrdersController < ApplicationController
       end
     end
     total
+  end
+
+  def update_product_quantity(product, quantity)
+    product.quantity -= quantity
+    product.save!
   end
 
 end
